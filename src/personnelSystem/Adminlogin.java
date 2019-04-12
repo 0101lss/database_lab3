@@ -56,7 +56,7 @@ public class Adminlogin {
         jm1.add(jmi1);
         jm1.add(jmi2);
         jm1.add(jmi3);
-        jm1.add(jmi4);
+//        jm1.add(jmi4);
 //        jm1.add(jmi5);
 //        jm1.add(jmi6);
 //        jm1.add(jmi7);
@@ -87,6 +87,7 @@ public class Adminlogin {
 //        jmi24=new JMenuItem("øº∆¿–≈œ¢");
         jm4.add(jmi17);
         jm4.add(jmi18);
+        jm4.add(jmi4);
 //        jm4.add(jmi19);
 //        jm4.add(jmi20);
 //        jm4.add(jmi21);
@@ -172,7 +173,7 @@ public class Adminlogin {
 		jmi4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					addsalary window = new addsalary();
+					changesalary window = new changesalary();
 					window.getFrame().setVisible(true);
 			}catch (Exception e1) {
 				e1.printStackTrace();

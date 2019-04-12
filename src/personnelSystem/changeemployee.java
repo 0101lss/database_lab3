@@ -16,6 +16,9 @@ import javax.swing.JTextPane;
 
 public class changeemployee {
 	private JFrame frame;
+	private String num1 = "";
+	private String num2 = "";
+	private String num3 = "";
 //	private JPasswordField passwordField;
 //	private JTable table=null;
 //	private JFrame frame1;
@@ -52,7 +55,6 @@ public class changeemployee {
 					JTextField textField10;
 					JTextField textField11;
 					JTextField textField12;
-					
 					JTextPane textPane = new JTextPane();
 					textPane.setBackground(SystemColor.control);
 					textPane.setFont(new Font("宋体", Font.PLAIN, 20));
@@ -200,7 +202,7 @@ public class changeemployee {
 				   JTextPane textPane12 = new JTextPane();
 					textPane12.setBackground(SystemColor.control);
 					textPane12.setFont(new Font("宋体", Font.PLAIN, 18));
-					textPane12.setText(" 录入人员*");
+					textPane12.setText(" 录入人员");
 					textPane12.setBounds(333, 302, 110, 32);
 					frame.getContentPane().add(textPane12);
 					//添加输入文本框
@@ -208,13 +210,12 @@ public class changeemployee {
 				   textField12.setBounds(450, 302, 178, 32);
 				   frame.getContentPane().add(textField12);
 				   textField12.setColumns(10);
-				   			   
 				   JButton btnNewButton = new JButton("确定");
 				   btnNewButton.addActionListener(new ActionListener() {
 					   public void actionPerformed(ActionEvent l) {
-					   String num1=textField.getText();
-						String num2=textField1.getText();
-				   String num3=textField2.getText();
+					   String num111=textField.getText();
+						String num22=textField1.getText();
+				   String num33=textField2.getText();
 				   String num4=textField3.getText();
 				   String num5=textField4.getText();
 				   String num6=textField5.getText();
@@ -227,7 +228,7 @@ public class changeemployee {
 				   String num13=textField12.getText();
 				 //  System.out.println(num1+"\n"+num2+"\n"+num3+"\n"+num4+"\n"+num5+"\n"+num6+"\n"+num7+"\n"+num8+"\n"+num9+"\n"+num10+"\n"+num11+"\n"+num12+"\n"+num13);
 					try {
-						if(num1.equals("") || num2.equals("") || num3.equals(" ") || num13.equals("")) {
+						if(!num1.equals(num111) || !num2.equals(num22) || !num3.equals(num33)) {
 							JOptionPane.showMessageDialog(btnNewButton,"带*信息不能更改填请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
 							}
 						else {
@@ -270,13 +271,16 @@ public class changeemployee {
 					   JButton btnNewButton1 = new JButton("查看");
 					   btnNewButton1.addActionListener(new ActionListener() {
 						   public void actionPerformed(ActionEvent l) {
-						   String num1=textField.getText();
+						   String numm=textField.getText();
+						   num1=numm;
 						try {
-							ArrayList<String> list=PersonnelSystem.searchemployeebyID(num1);
+							ArrayList<String> list=PersonnelSystem.searchemployeebyID(numm);
 							//System.out.println(list.toString());
 							if(list.size()==12) {
 							textField1.setText(list.get(0));
+							num2=list.get(0);
 							textField2.setText(list.get(1));
+							num3=list.get(1);
 							if(list.get(2)!="")
 							textField3.setText(list.get(2));
 							if(list.get(3)!="")

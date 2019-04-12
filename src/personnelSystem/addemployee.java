@@ -226,8 +226,11 @@ public class addemployee {
 				   String num13=textField12.getText();
 					try {
 						if(num1.equals("") || num2.equals("") || num3.equals(" ") || num13.equals("")) {
-						JOptionPane.showMessageDialog(btnNewButton,"必填信息不能空填请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
-						}else {
+						JOptionPane.showMessageDialog(btnNewButton,"必填信息不能空请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
+						}else if(!num4.equals("") && !num4.equals("男") &&  !num4.equals("女")) {
+							JOptionPane.showMessageDialog(btnNewButton,"性别信息只能填男或女请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
+						}
+						else {
 							PersonnelSystem.addemployee(num1,num2,num3,num4,num5,num6,num7,num8,num9,num10,num11,num12,num13);
 						JOptionPane.showMessageDialog(btnNewButton,"添加成功");
 						}						
@@ -262,7 +265,7 @@ public class addemployee {
 						textField12.setText("");
 					}catch (NumberFormatException e2) {
 						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(btnNewButton,"信息填写有误，请检查后重新输入！","Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(btnNewButton,"年龄信息填写有误，请检查后重新输入！","Error", JOptionPane.ERROR_MESSAGE);
 						textField.setText("");
 						textField1.setText("");
 						textField2.setText("");

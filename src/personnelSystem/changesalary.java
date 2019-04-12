@@ -6,6 +6,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,8 +14,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
-public class addsalary  {
+public class changesalary  {
 	private JFrame frame;
+	private String num11="";
 //	private JPasswordField passwordField;
 //	private JTable table=null;
 //	private JFrame frame1;
@@ -24,12 +26,12 @@ public class addsalary  {
 	{
 		return frame;
 	}
-	public addsalary() throws ClassNotFoundException, SQLException {
+	public changesalary() throws ClassNotFoundException, SQLException {
 		initialize();
 	}
 	private void initialize() throws ClassNotFoundException, SQLException {
 		frame = new JFrame();
-		frame.setTitle("添加职工工资界面（*不能为空）");
+		frame.setTitle("修改职工工资界面（*不能为空）");
 		frame.setForeground(Color.DARK_GRAY);
 		frame.getContentPane().setFont(new Font("微软雅黑", Font.BOLD, 16));
 		frame.getContentPane().setForeground(new Color(0, 0, 0));
@@ -61,7 +63,7 @@ public class addsalary  {
 					JTextPane textPane1 = new JTextPane();
 					textPane1.setBackground(SystemColor.control);
 					textPane1.setFont(new Font("宋体", Font.PLAIN, 20));
-					textPane1.setText(" 基本工资*");
+					textPane1.setText(" 基本工资");
 					textPane1.setBounds(25, 94,120, 32);
 					frame.getContentPane().add(textPane1);
 					//添加输入文本框
@@ -121,7 +123,7 @@ public class addsalary  {
 				   JTextPane textPane9 = new JTextPane();
 					textPane9.setBackground(SystemColor.control);
 					textPane9.setFont(new Font("宋体", Font.PLAIN, 20));
-					textPane9.setText(" 管理员*");
+					textPane9.setText(" 管理员");
 					textPane9.setBounds(333,146, 110, 32);
 					frame.getContentPane().add(textPane9);
 					//添加输入文本框
@@ -129,11 +131,11 @@ public class addsalary  {
 				   textField9.setBounds(450, 146, 178, 32);
 				   frame.getContentPane().add(textField9);
 				   textField9.setColumns(10);
-				   			   			   
 				   JButton btnNewButton = new JButton("确定");
 				   btnNewButton.addActionListener(new ActionListener() {
 					   public void actionPerformed(ActionEvent l) {
 					   String num1=textField.getText();
+					   System.out.println(num1);
 						String num2=textField1.getText();
 				   String num3=textField2.getText();
 				   String num4=textField3.getText();
@@ -141,11 +143,11 @@ public class addsalary  {
 				   String num9=textField8.getText();
 				   String num10=textField9.getText();
 					try {
-						if(num1.equals("") || num2.equals("") || num10.equals(" ")) {
-						JOptionPane.showMessageDialog(btnNewButton,"必填信息不能空填请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
+						if(!num1.equals(num11)) {
+						JOptionPane.showMessageDialog(btnNewButton,"*的信息不能修改填请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
 						}else {
-							PersonnelSystem.addsalary(num1,num2,num3,num4,num8,num9,num10);
-						JOptionPane.showMessageDialog(btnNewButton,"添加成功");
+							PersonnelSystem.changesalary(num1,num2,num3,num4,num8,num9,num10);
+						JOptionPane.showMessageDialog(btnNewButton,"修改成功");
 						}						
 						textField.setText("");
 						textField1.setText("");
@@ -154,7 +156,7 @@ public class addsalary  {
 						textField7.setText("");
 						textField8.setText("");
 						textField9.setText("");
-					} catch (ClassNotFoundException | SQLException e2) {
+					} catch (ClassNotFoundException | SQLException e) {
 						// TODO Auto-generated catch block
 						JOptionPane.showMessageDialog(btnNewButton,"职工号名已存在或有信息未填请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
 						textField.setText("");
@@ -164,9 +166,49 @@ public class addsalary  {
 						textField7.setText("");
 						textField8.setText("");
 						textField9.setText("");
-					} }});
-				   btnNewButton.setBounds(300, 300, 111, 38);
+					} catch (NumberFormatException e2) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(btnNewButton,"工资信息填写有误，请检查后重新输入！","Error", JOptionPane.ERROR_MESSAGE);
+						textField.setText("");
+						textField1.setText("");
+						textField2.setText("");
+						textField3.setText("");
+						textField7.setText("");
+						textField8.setText("");
+						textField9.setText("");
+					}
+					}});
+				   btnNewButton.setBounds(200, 300, 111, 38);
 					frame.getContentPane().add(btnNewButton);
+					
+					JButton btnNewButton1 = new JButton("查看");
+					   btnNewButton1.addActionListener(new ActionListener() {
+						   public void actionPerformed(ActionEvent l) {
+						   String num1=textField.getText();
+						   num11=num1;
+						try {
+							ArrayList<String> list=PersonnelSystem.searchsalarybyID(num1);
+							//System.out.println(list.toString());
+							if(list.size()==7) {
+							textField1.setText(list.get(0));
+							if(list.get(1)!="")
+							textField2.setText(list.get(1));
+							if(list.get(2)!="")
+							textField3.setText(list.get(2));
+							if(list.get(3)!="")
+							textField7.setText(list.get(3));
+							if(list.get(5)!="")
+							textField8.setText(list.get(5));
+							}
+							else
+							JOptionPane.showMessageDialog(btnNewButton1,"职工号不存在请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
+						} catch (ClassNotFoundException | SQLException e2) {
+							// TODO Auto-generated catch block
+							JOptionPane.showMessageDialog(btnNewButton1,"职工号不存在请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
+							textField.setText("");
+						} }});
+					   btnNewButton1.setBounds(400,300, 111, 38);
+					   frame.getContentPane().add(btnNewButton1);
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(btnNewButton);
 	}

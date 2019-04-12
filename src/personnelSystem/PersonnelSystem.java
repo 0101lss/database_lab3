@@ -128,7 +128,9 @@ public class PersonnelSystem {
 	public static void addemployee(String s1,String s2,String s3,String s4,String s5,String s6,String s7
 			,String s8,String s9,String s10,String s11,String s12,String s13) throws ClassNotFoundException, SQLException {
 		 Connection conn=connection();
+		 conn.setAutoCommit(false);//取消自动提交事务
 		   String sql="insert into t_employee values('"+s1+"','"+s2+"','"+s3+"',?,?,?,?,?,?,?,?,?,'"+s13+"')";
+		   String sql3="insert into t_salary  values( '"+s1+"',3000,0,0,100,3100,100,3000)";
 		   PreparedStatement psmt=conn.prepareStatement(sql);
 		   if(!s4.equals(""))
 			   psmt.setString(1,s4);
@@ -166,8 +168,10 @@ public class PersonnelSystem {
 			   psmt.setString(9,s12);
 		   else
 			   psmt.setString(9,null);
-		   int rs= psmt.executeUpdate();
-		   if(rs!=0) {
+		   int result1= psmt.executeUpdate();
+		   PreparedStatement psmt3=conn.prepareStatement(sql3);
+		   int result2= psmt3.executeUpdate();
+		//   if(rs!=0) {
 			   String sql1="select adminName from t_admin where AdminID='"+s13+"'";
 			   PreparedStatement psmt1=conn.prepareStatement(sql1);
 			   ResultSet rs1 = psmt1.executeQuery();
@@ -176,11 +180,27 @@ public class PersonnelSystem {
 				   SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				   String sql2="insert into t_logs(AdminID,adminName,content,time) values('"+s13+"','"+rs1.getString(1)+"','"
 						   +"添加职工"+s1+"',?)";
+				   String sql5="insert into t_logs(AdminID,adminName,content,time) values('"+s13+"','"+rs1.getString(1)+"','"
+						   +"添加职工"+s1+"的工资',?)";
 				   PreparedStatement psmt2=conn.prepareStatement(sql2);
 				   psmt2.setString(1,dateFormat.format(calendar.getTime()));
 				   psmt2.executeUpdate();
+				   PreparedStatement psmt5=conn.prepareStatement(sql5);
+				   psmt5.setString(1,dateFormat.format(calendar.getTime()));
+				   psmt5.executeUpdate();
 			   }
-		   }
+		//   }
+		   if(result1>0&&result2>0)
+			{
+				
+				conn.commit();//提交事务
+				//return 1;
+			}
+			else
+			{
+				conn.rollback();//回滚事务
+				//return 0;
+			}
 	}
 	public static ArrayList<String> searchemployeebyID(String num1) throws SQLException, ClassNotFoundException{
 		 Connection conn=connection();
@@ -190,11 +210,20 @@ public class PersonnelSystem {
 		   ResultSet rs = psmt.executeQuery();
 		   if(rs.next()) {
 			   for(int i=2;i<14;i++) {
-				 //  System.out.println(rs.getString(i));
-			//	   if(i!=5)
 				   list.add(rs.getString(i));
-//				   else
-//					   list.add(rs.getInt(i));
+			   }
+		   }
+		   return list;
+	}
+	public static ArrayList<String> searchsalarybyID(String num1) throws SQLException, ClassNotFoundException{
+		 Connection conn=connection();
+		 ArrayList<String> list=new ArrayList<String>();
+		   String sql="select * from t_salary where employeeID = '"+num1+"'";
+		   PreparedStatement psmt=conn.prepareStatement(sql);
+		   ResultSet rs = psmt.executeQuery();
+		   if(rs.next()) {
+			   for(int i=2;i<9;i++) {
+				   list.add(rs.getString(i));
 			   }
 		   }
 		   return list;
@@ -280,6 +309,42 @@ public class PersonnelSystem {
 		return 0;
 	}
 	public static int deleteemployee(String s1,String s2) throws ClassNotFoundException, SQLException {
+//		Connection conn=connection();
+//		conn.setAutoCommit(false);//取消自动提交事务
+//		String sql1="delete from t_salary where employeeID = '"+s1+"'";
+//		String sql2="delete from t_employee where employeeID = '"+s1+"'";
+//		String sql5="select adminName from t_admin where AdminID='"+s2+"'";
+//		PreparedStatement psmt4=conn.prepareStatement(sql1);
+//		int result1=psmt4.executeUpdate();
+//		PreparedStatement psmt5=conn.prepareStatement(sql2);
+//		   int result2=psmt5.executeUpdate();
+//	    PreparedStatement psmt1=conn.prepareStatement(sql5);
+//		   ResultSet rs1 = psmt1.executeQuery();
+//		   if(rs1.next()) {
+//			   Calendar calendar= Calendar.getInstance();
+//			   SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");		
+//		String sql3="insert into t_logs(AdminID,adminName,content,time) values('"+s2+"','"+rs1.getString(1)+"','"
+//				   +"删除职工"+s1+"',?)";
+//	    String sql4="insert into t_logs(AdminID,adminName,content,time) values('"+s2+"','"+rs1.getString(1)+"','"
+//				   +"删除职工"+s1+"的工资',?)";
+//			   PreparedStatement psmt2=conn.prepareStatement(sql3);
+//			   PreparedStatement psmt3=conn.prepareStatement(sql4);
+//			   psmt2.setString(1,dateFormat.format(calendar.getTime()));
+//			   psmt3.setString(1,dateFormat.format(calendar.getTime()));
+//			   psmt2.executeUpdate();
+//			   psmt3.executeUpdate();
+//		   }
+//		   if(result1>0&&result2>0)
+//			{
+//				
+//				conn.commit();//提交事务
+//				return 1;
+//			}
+//			else
+//			{
+//				conn.rollback();//回滚事务
+//				return 0;
+//			}
 		Connection conn=connection();
 		String sql="delete from t_employee where employeeID = '"+s1+"'";
 		PreparedStatement psmt=conn.prepareStatement(sql);
@@ -668,42 +733,43 @@ public class PersonnelSystem {
 				   }
 			}
 	}
-	public static void addsalary(String s1,String s2,String s3,String s4,String s5,String s6,String s7) throws ClassNotFoundException, SQLException {
+	public static void changesalary(String s1,String s2,String s3,String s4,String s5,String s6,String s7) throws ClassNotFoundException, SQLException {
 		 Connection conn=connection();
 		 double sum=Double.valueOf(s2);
 		 double sum1=0;
-		   String sql="insert into t_salary values(?,?,?,?,?,?,?,?)";
+		   String sql="update t_salary set basicwage=?,allowance=?,award=?,pension=?,payable=?" + 
+		   		",taxes=?,realwage=? where employeeID= ?";
 		   PreparedStatement psmt=conn.prepareStatement(sql);
-		   psmt.setString(1,s1);
-		   psmt.setDouble(2, Double.valueOf(s2));
+		   psmt.setString(8,s1);
+		   psmt.setDouble(1, Double.valueOf(s2));
 		   if(!s3.equals("")) {
-		   psmt.setDouble(3, Double.valueOf(s3));
+		   psmt.setDouble(2, Double.valueOf(s3));
 		   sum=sum+Double.valueOf(s3);
 		   }
 		   else
-			   psmt.setString(3,null);
+			   psmt.setString(2,null);
 		   if(!s4.equals("")) {
-			   psmt.setDouble(4, Double.valueOf(s4));
+			   psmt.setDouble(3, Double.valueOf(s4));
 			  sum=sum+Double.valueOf(s4);
 		   }
 			   else
-				   psmt.setString(4,null);
+				   psmt.setString(3,null);
 		   if(!s5.equals("")) {
-			   psmt.setDouble(5, Double.valueOf(s5));
+			   psmt.setDouble(4, Double.valueOf(s5));
 			   sum=sum+Double.valueOf(s5);
 		   }
 			   else
-				   psmt.setString(5,null);
-		   psmt.setDouble(6, sum);
+				   psmt.setString(4,null);
+		   psmt.setDouble(5, sum);
 		   if(!s6.equals("")) {
-			   psmt.setDouble(7, Double.valueOf(s6));
+			   psmt.setDouble(6, Double.valueOf(s6));
 			   sum1=sum-Double.valueOf(s6);
 		   }
 			   else {
-				   psmt.setString(7,null);
+				   psmt.setString(6,null);
 				   sum1=sum;
 			   }
-		   psmt.setDouble(8, sum1);
+		   psmt.setDouble(7, sum1);
 		   int rs=psmt.executeUpdate();
 		   if(rs!=0) {
 				 String sql1="select adminName from t_admin where AdminID='"+s7+"'";
@@ -713,7 +779,7 @@ public class PersonnelSystem {
 					   Calendar calendar= Calendar.getInstance();
 					   SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 					   String sql2="insert into t_logs(AdminID,adminName,content,time) values('"+s7+"','"+rs1.getString(1)+"','"
-							   +"新增了职员"+s1+"的工资信息',?)";
+							   +"修改了职员"+s1+"的工资信息',?)";
 					   PreparedStatement psmt2=conn.prepareStatement(sql2);
 					   psmt2.setString(1,dateFormat.format(calendar.getTime()));
 					   psmt2.executeUpdate();
