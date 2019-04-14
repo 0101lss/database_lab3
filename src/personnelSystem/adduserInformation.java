@@ -99,8 +99,12 @@ public class adduserInformation {
 						if(num1.equals("") || num2.equals("") || num3.equals(" ") || num4.equals("")) {
 							JOptionPane.showMessageDialog(btnNewButton,"必填信息不能空填请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
 							}else {
-						PersonnelSystem.adduser(num1,num2,num3,num4);
+						if(PersonnelSystem.employeeexist(num3)) {
+							PersonnelSystem.adduser(num1,num2,num3,num4);
 						JOptionPane.showMessageDialog(btnNewButton,"添加成功");
+						}else {
+							JOptionPane.showMessageDialog(btnNewButton,"该职工已有用户号，请重新输入！","Error", JOptionPane.ERROR_MESSAGE);
+						}
 						textField.setText("");
 						textField1.setText("");
 						textField2.setText("");

@@ -86,6 +86,16 @@ public class PersonnelSystem {
 			   }
 		   }
 	}
+	public static boolean employeeexist(String s) throws ClassNotFoundException, SQLException {
+		 Connection conn=connection();
+		   String sql="select * from t_user where employeeID = '"+s+"'";
+		   PreparedStatement psmt=conn.prepareStatement(sql);
+		   ResultSet rs = psmt.executeQuery();
+		   if(rs.next()) {
+			   return false;
+		   }
+		   return true;
+	}
 	public static void changeuserpwd(String s1,String s2,String s4) throws ClassNotFoundException, SQLException {
 		 Connection conn=connection();
 		   String sql="update t_user set tpasswd = '"+s2+"' where tName = '"+s1+"'";
